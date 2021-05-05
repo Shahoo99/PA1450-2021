@@ -9,12 +9,16 @@ def serve(options):
     """Serve an API."""
 
     # Create a Flask application
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder="../static")
 
     @app.route("/")
     def index():
         """Return the index page of the website."""
         return send_file("../www/index.html")
+    
+    @app.route("//")
+    def shahoo():
+        return send_file("../www/shahoo.html")
 
     @app.route("/greeting/<name>")
     def greeting(name):
