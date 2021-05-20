@@ -1,32 +1,50 @@
-"""Module for serving an API."""
 
-from flask import Flask, send_file, render_template
+#from flask_mysqldb import MySQL
+from flask import Flask, send_file, render_template, request, Blueprint
 import pandas as pd
 import csv
-
+#import aggdata problem med import
+#import timespan
 
 def serve(options):
     """Serve an API."""
 
     # Create a Flask application
     app = Flask(__name__, static_folder="../static")
+    posts = Blueprint("posts", __name__)
 
     @app.route("/")
     def index():
         """Return the index page of the website."""
         return send_file("../www/index.html")
     
-    @app.route("//")
-    def shahoo():
-        return send_file("../www/shahoo.html")
+    @posts.route("/", methods=["POST", "GET"])
+    def posts_list():
+        q = request.args.get("q")
 
-    @app.route("/greeting/<name>")
-    def greeting(name):
-        """Return a greeting for the user."""
-        return "Hello, {}!".format(name)
+        if q:
+            posts = Post.query.filter(Post.title.contains(q) | 
+            Post.body.cointains(q))
+        else:
+            posts = Post.query.all()
+        return render_template("/www/index.html", posts=posts)    
 
-    @app.route("/showdata")
+    # @app.route("/showdata")
+    # def agg_data():
+    #     return aggdata.aggregated_data()
+
+    # @app.route("/cases_in_timespan")
+    # def cases_timespan():
+    #     return timespan.cases_in_time()
+
+    # @app.route("/greeting/<name>")
+    # def greeting(name):
+    #     """Return a greeting for the user."""
+    #     return "Hello, {}!".format(name)
+
+    @app.route("/showdata", methods=["GET"])
     def aggregated_data():
+        args = request.args
         df = pd.read_csv('time_series_covid19_deaths_global.csv')
         death_list = []
         province_list = []
@@ -48,7 +66,7 @@ def serve(options):
 
 
     @app.route("/cases_in_timespan")
-    def cases_in_timespan():
+    def cases_in_time():
         df = pd.read_csv('time_series_covid19_confirmed_global.csv')
         date_list = []
         case_list = []
@@ -70,19 +88,14 @@ def serve(options):
             a = 'At', final_date_list[h], 'total amount of cases was', final_case_list[h]
             date_death_list.append(a)
         return str(date_death_list)
+
+    #@app.route("/livesearch", methods=["POST", "GET"])
+    #def livesearch():
+    #    searchbox = request.form.get("text")
     
-
-
-
-
-
-
-
-
-
-
-
-    
+    #@app.route("//")
+    #def shahoo():
+    #    return send_file("../www/shahoo.html")
 
     app.run(host=options.address, port=options.port, debug=True)
 

@@ -7,11 +7,30 @@
   <title>PA1450</title>
   <link rel="stylesheet" href="../static/main.css">
   <meta name="description" content="PA1450"/>
+  <!--<script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
 </head>
 <body>
+  <header>
+
+    <!--<div class = "topnav">
+      <input type ="text"
+      placeholder="Search..."
+      id = "livebox">
+      <button type="submit">Search</button>
+    </div> -->
+
+    <div class = "topnav">
+      <form class ="form-inline my-2 my-lg-0" method="GET">
+        <input class ="form-control mr-sm-2" type="search" placeholder="Search" name="q">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
+
+    </div>
+
+  </header>
   <h1>Covid Center</h1>
   <h2>Information</h2>
-  <p><a href="shahoo.html">Shahoos funktion</a></p>
+  <!--<p><a href="shahoo.html">Shahoos funktion</a></p> -->
   <p>The purpose of this system is to aggregate and visualize COVID data for regions in the 
     country and the rest of the world. By sourcing data from sources such as John Hopkins and 
     Folkhälsomyndigheten, the system is intended to expose aggregated, up-to-date data via an API. 
@@ -20,10 +39,40 @@
     Users of the service may use the data, visualizations and models to make informed decisions 
     related to travel. In the section below, you will find the related 
     user stories to describe the functionalityand desired capabilities of the system.</p>
-  <p>The API can be used over at <a href="/greeting/Joe%20Doe">/greeting/&lt;username&gt;</a>.</p>
-  <object data="/data" style="width: 100%">
-    <embed src="/greeting/Joe%20Doe"></embed>
-  </object>
+
+    <p><a href="/showdata">View aggregated data </a></p>
+    <object data = "/data" style="width: 100%">
+      <embed src="/aggregated_data"></embed>
+    </object>
+
+    <p><a href="/cases_in_timespan">View cases in timespan data </a></p>
+    <object data = "/data" style="width: 100%">
+      <embed src="/cases_in_time"></embed> <!-- om  def namn samma som app.route sa far du en lista-->
+    </object>    
+
+  <!--<p>The API can be used over at <a href="/greeting/Joe%20Doe">/greeting/&lt;username&gt;</a>.</p> -->
+  <!--<object data="/data" style="width: 100%">
+    <embed src="/greeting/name"></embed>
+  </object>-->
 
 </body>
+
+<!-- <script>
+  $(document).ready(function(){
+    $("#livebox").on("input",function(e){
+      text=$("#livebox").val();
+      console.log(text);
+      $.ajax({
+        method:"post",
+        url:"/livesearch",
+        data:{text:text},
+        success:function(res){
+          
+        }
+      })
+    })
+  })
+  </script>
+
+-->
 </html>
