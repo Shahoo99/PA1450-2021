@@ -1,10 +1,9 @@
 
-#from flask_mysqldb import MySQL
 from flask import Flask, send_file, render_template, request, Blueprint
+from flask.helpers import url_for
 import pandas as pd
 import csv
-#import aggdata problem med import
-#import timespan
+
 
 def serve(options):
     """Serve an API."""
@@ -16,35 +15,10 @@ def serve(options):
     @app.route("/")
     def index():
         """Return the index page of the website."""
-        return send_file("../www/index.html")
-    
-    @posts.route("/", methods=["POST", "GET"])
-    def posts_list():
-        q = request.args.get("q")
+        return send_file("../www/index.html")   
 
-        if q:
-            posts = Post.query.filter(Post.title.contains(q) | 
-            Post.body.cointains(q))
-        else:
-            posts = Post.query.all()
-        return render_template("/www/index.html", posts=posts)    
-
-    # @app.route("/showdata")
-    # def agg_data():
-    #     return aggdata.aggregated_data()
-
-    # @app.route("/cases_in_timespan")
-    # def cases_timespan():
-    #     return timespan.cases_in_time()
-
-    # @app.route("/greeting/<name>")
-    # def greeting(name):
-    #     """Return a greeting for the user."""
-    #     return "Hello, {}!".format(name)
-
-    @app.route("/showdata", methods=["GET"])
+    @app.route("/showdata")
     def aggregated_data():
-        args = request.args
         df = pd.read_csv('time_series_covid19_deaths_global.csv')
         death_list = []
         province_list = []
@@ -63,7 +37,6 @@ def serve(options):
             a = 'In', country_list[i], province_list[i], final_death_list[i], 'have died',
             final_list.append(str(a))
         return ("\n".join(final_list))
-
 
     @app.route("/cases_in_timespan")
     def cases_in_time():
@@ -89,13 +62,15 @@ def serve(options):
             date_death_list.append(a)
         return str(date_death_list)
 
-    #@app.route("/livesearch", methods=["POST", "GET"])
-    #def livesearch():
-    #    searchbox = request.form.get("text")
-    
-    #@app.route("//")
-    #def shahoo():
-    #    return send_file("../www/shahoo.html")
+    @app.route("/", methods=['GET', 'POST'])
+    def query():
+        q = request.form.get("q")
+        if q == "show data": 
+            return aggregated_data()
+        elif q == "cases in timespan":
+            return cases_in_time()
+        else:
+            return send_file("../www/index.html")
 
     app.run(host=options.address, port=options.port, debug=True)
 
