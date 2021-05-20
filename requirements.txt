@@ -4,3 +4,4 @@ requests==2.25.1
 pandas==1.2.4
 csv-reader==1.2.0
 flask-mysql==1.5.2
+os-sys == 2.1.4

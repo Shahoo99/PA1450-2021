@@ -3,6 +3,7 @@ from flask import Flask, send_file, render_template, request, Blueprint
 import pandas as pd
 from flask.helpers import url_for
 import csv
+from application.functions import aggdata, cases
 import matplotlib.pyplot as plt
 
 def serve(options):
@@ -10,7 +11,6 @@ def serve(options):
 
     # Create a Flask application
     app = Flask(__name__, static_folder="../static")
-    posts = Blueprint("posts", __name__)
 
     @app.route("/")
     def index():
@@ -19,48 +19,11 @@ def serve(options):
 
     @app.route("/showdata")
     def aggregated_data():
-        df = pd.read_csv('time_series_covid19_deaths_global.csv')
-        death_list = []
-        province_list = []
-        country_list = []
-        final_list = []
-        infile = open('time_series_covid19_deaths_global.csv')
-        reader = csv.reader(infile)
-        for row in reader:
-            death_list.append(row[-1])
-            final_death_list = death_list[1 : ]
-        for x in df['Country/Region']:
-            country_list.append(x)
-        for y in df['Province/State']:
-            province_list.append(y)
-        for i in range(len(death_list)-1):
-            a = 'In', country_list[i], province_list[i], final_death_list[i], 'have died',
-            final_list.append(str(a))
-        return ("\n".join(final_list))
+        return aggdata.aggregated_data()
 
     @app.route("/cases_in_timespan")
     def cases_in_time():
-        df = pd.read_csv('time_series_covid19_confirmed_global.csv')
-        date_list = []
-        case_list = []
-        date_death_list = []
-        specific_country = df.loc[df['Country/Region']== 'China']
-        spec_count_value = specific_country.values
-        b = spec_count_value.tolist()
-        for x in b:
-            for i in x:
-                case_list.append(i)
-        for y in specific_country:
-            date_list.append(y)
-        final_date_list = date_list[4 : ]
-        final_case_list = case_list[4 : ]
-        from_index = final_date_list.index('1/1/21')
-        to_index = final_date_list.index('1/15/21')
-        new_cases_in_period = final_case_list[to_index] - final_case_list[from_index]
-        for h in range(from_index +1, to_index):
-            a = 'At', final_date_list[h], 'total amount of cases was', final_case_list[h]
-            date_death_list.append(a)
-        return str(date_death_list)
+        return cases.cases_in_time()
 
     @app.route("/", methods=['GET', 'POST'])
     def query():

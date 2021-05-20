@@ -3,6 +3,7 @@
 from argparse import ArgumentParser
 
 from application.commands import serve, greet #, aggregated_data, cases_in_time
+from application.functions import aggdata, cases
 
 def main():
     """Main method of the application."""
