@@ -4,4 +4,4 @@ requests==2.25.1
 pandas==1.2.4
 csv-reader==1.2.0
 matplotlib==3.4.2
-
+plotly==4.1.0
