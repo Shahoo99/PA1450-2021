@@ -1,6 +1,7 @@
 
 from flask import Flask, send_file, render_template, request
-from application.functions import aggdata, cases, cap
+from application.functions import aggdata, cases, cap, plot
+
 
 def serve(options):
     """Serve an API."""
@@ -13,11 +14,15 @@ def serve(options):
         """Return the index page of the website."""
         return send_file("../www/index.html")   
 
+    @app.route("/plot")
+    def plot_graph():
+        return plot.plot_graph()
+    
     @app.route("/showdata")
     def aggregated_data():
         return aggdata.aggregated_data()
 
-    @app.route("/timespan/<country>/<from_date>/<to_date>") #m.d.y
+    @app.route("/timespan/<country>/<from_date>/<to_date>")
     def cases_in_time(country, from_date, to_date):
         return cases.cases_in_time(country, from_date, to_date)
 
