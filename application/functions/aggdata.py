@@ -1,5 +1,6 @@
 import pandas as pd
 import csv
+from flask import render_template
 
 def aggregated_data():
     df = pd.read_csv('time_series_covid19_deaths_global.csv')
@@ -19,5 +20,4 @@ def aggregated_data():
     for i in range(len(death_list)-1):
         a = 'In', country_list[i], province_list[i], final_death_list[i], 'have died',
         final_list.append(str(a))
-    return ("\n".join(final_list))
-
+    return render_template('page.html', content = final_list)
